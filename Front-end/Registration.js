@@ -8,10 +8,8 @@
         const phonenumber  = document.getElementById("phonenumber").value;
         const age  = document.getElementById("age").value;
         const emailAdd  = document.getElementById("emailAdd").value;
+        const gender  = document.getElementById("gender").value;
         
-        
-        console.log("emailAdd",emailAdd)
-
         const formData = {
             userName: username,
             password: password,
@@ -19,7 +17,8 @@
             fullName:fullname,
             phoneNo:phonenumber,
             age:age,
-            emailAdd:emailAdd
+            emailAdd:emailAdd,
+            gender:gender
         };
 
         try {
