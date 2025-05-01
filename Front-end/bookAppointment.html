@@ -1,45 +1,363 @@
-<!-- BookAppointment.jsp -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Appointment</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="style.css"> 
+    <title>Medical Appointment Booking</title>
+    <style>
+        /* CSS Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: #1a73e8;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .booking-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .booking-form {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #1a73e8;
+            outline: none;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        button {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0d5bba;
+        }
+
+        .doctor-info {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .doctor-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .doctor-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 20px;
+            border: 3px solid #1a73e8;
+        }
+
+        .doctor-name {
+            font-size: 1.5rem;
+            color: #1a73e8;
+            margin-bottom: 5px;
+        }
+
+        .doctor-specialty {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .doctor-details {
+            margin-top: 20px;
+        }
+
+        .detail-item {
+            display: flex;
+            margin-bottom: 15px;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #555;
+            min-width: 120px;
+        }
+
+        .time-slots {
+            margin-top: 30px;
+        }
+
+        .time-slots h3 {
+            margin-bottom: 15px;
+            color: #1a73e8;
+        }
+
+        .slot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+        }
+
+        .slot {
+            background-color: #e8f0fe;
+            color: #1a73e8;
+            padding: 10px;
+            text-align: center;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .slot:hover, .slot.selected {
+            background-color: #1a73e8;
+            color: white;
+        }
+
+        .slot.booked {
+            background-color: #f1f3f4;
+            color: #999;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .doctor-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .doctor-img {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
 </head>
-<body class="flex justify-center items-center h-screen bg-gray-100">
-    <div class="bg-white p-8 rounded-lg shadow-lg w-96">
-        <h2 class="text-2xl font-bold mb-4 text-center">Book an Appointment</h2>
-        <form action="BookAppointmentServlet" method="POST">
-            <label class="block mb-2">Select Date</label>
-            <input type="date" name="date" required class="w-full px-3 py-2 border rounded mb-4">
-            <label class="block mb-2">Select Time</label>
-            <input type="time" name="time" required class="w-full px-3 py-2 border rounded mb-4">
-            <label class="block mb-2">Doctor</label>
-            <select name="doctor" required class="w-full px-3 py-2 border rounded mb-4">
-                <option value="Dr. Smith">Dr. Smith</option>
-                <option value="Dr. Johnson">Dr. Johnson</option>
-            </select>
-            <button type="submit" class="w-full bg-green-500 text-white py-2 rounded">Book</button>
-        </form>
-    </div>
-     <!-- Header with Navigation -->
-     <header>
-        <nav class="navbar">
-            <div class="logo">
-                <img src="medcareimg.png" alt="MedCare Logo">
-                <h1>MedCare</h1>
-            </div>
-            <ul class="nav-links">
-                <li><a href="Home.html">Home</a></li>
-                <li><a href="#">Services</a></li>
-                <li><a href="doctors.html">Doctors</a></li>
-                <li><a href="AboutPage.html">About</a></li>
-                <li><a href="cantact.html">Contact</a></li>
-                <li><a href="login.html" class="btn btn-secondary">Login</a></li>
-            </ul>
-        </nav>
+<body>
+    <header>
+        <div class="container">
+            <h1>Book Your Appointment</h1>
+            <p>Schedule your visit with our healthcare professionals</p>
+        </div>
     </header>
+
+    <div class="container">
+        <div class="booking-container">
+            <div class="booking-form">
+                <h2>Appointment Details</h2>
+                <form id="appointmentForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <input type="text" id="firstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" id="lastName" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dob">Date of Birth</label>
+                        <input type="date" id="dob" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="appointmentDate">Appointment Date</label>
+                        <input type="date" id="appointmentDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="department">Department</label>
+                        <select id="department" required>
+                            <option value="">Select Department</option>
+                            <option value="cardiology">Cardiology</option>
+                            <option value="neurology">Neurology</option>
+                            <option value="orthopedics">Orthopedics</option>
+                            <option value="pediatrics">Pediatrics</option>
+                            <option value="dermatology">Dermatology</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="doctor">Doctor</label>
+                        <select id="doctor" required>
+                            <option value="">Select Doctor</option>
+                            <option value="dr-smith">Dr. Smith (Cardiology)</option>
+                            <option value="dr-johnson">Dr. Johnson (Neurology)</option>
+                            <option value="dr-williams">Dr. Williams (Orthopedics)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notes">Additional Notes</label>
+                        <textarea id="notes" rows="4"></textarea>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="urgencyLevel">Urgency Level </label>
+                        <select id="urgencyLevel" required>
+                            <option value="">Select Urgency Level</option>
+                            <option value="routine">Routine</option>
+                            <option value="urgent">Urgent</option>
+                            <option value="emergency">Emergency</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit">Book Appointment</button>
+                </form>
+            </div>
+
+            <div class="doctor-info">
+                <div class="doctor-header">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Doctor" class="doctor-img">
+                    <div>
+                        <h3 class="doctor-name">Dr. Robert Smith</h3>
+                        <p class="doctor-specialty">Cardiologist</p>
+                    </div>
+                </div>
+
+                <div class="doctor-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Specialization:</span>
+                        <span>Cardiology, Internal Medicine</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Experience:</span>
+                        <span>15 years</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Education:</span>
+                        <span>MD, Harvard Medical School</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Languages:</span>
+                        <span>English, Spanish</span>
+                    </div>
+                </div>
+
+                <div class="time-slots">
+                    <h3>Available Time Slots</h3>
+                    <div class="slot-grid">
+                        <div class="slot">9:00 AM</div>
+                        <div class="slot">9:30 AM</div>
+                        <div class="slot">10:00 AM</div>
+                        <div class="slot booked">10:30 AM</div>
+                        <div class="slot">11:00 AM</div>
+                        <div class="slot">11:30 AM</div>
+                        <div class="slot">2:00 PM</div>
+                        <div class="slot">2:30 PM</div>
+                        <div class="slot">3:00 PM</div>
+                        <div class="slot">3:30 PM</div>
+                        <div class="slot">4:00 PM</div>
+                        <div class="slot">4:30 PM</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2023 Medical Appointment System. All rights reserved.</p>
+        </div>
+    </footer>
+     <script src="bookApointment.js"></script>
 </body>
 </html>
