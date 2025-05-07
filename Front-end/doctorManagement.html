@@ -1,0 +1,143 @@
+<!-- admin-manage-doctors.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manage Doctors - Admin</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f1f5f9;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #1e293b;
+    }
+
+    .form-section {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #10b981;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+    }
+
+    .actions button {
+      margin-right: 5px;
+      background-color: #3b82f6;
+    }
+
+    .actions .delete {
+      background-color: #ef4444;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Manage Doctors</h2>
+
+  <div class="form-section">
+    <form id="addDoctorForm">
+      <input type="text" placeholder="Doctor Name" id="doctorName" required />
+      <input type="text" placeholder="Specialization" id="doctorSpecialty" required />
+      <input type="text" placeholder="Image File Name (e.g., umair.png)" id="doctorImage" required />
+      <button type="submit">Add Doctor</button>
+    </form>
+  </div>
+
+  <table id="doctorsTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Specialty</th>
+        <th>Image</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Example Doctor Row -->
+      <tr>
+        <td>Dr. M.W.M UMAIR</td>
+        <td>Cardiologist</td>
+        <td>umair.png</td>
+        <td class="actions">
+          <button>Edit</button>
+          <button class="delete">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <script>
+    const form = document.getElementById('addDoctorForm');
+    const table = document.getElementById('doctorsTable').getElementsByTagName('tbody')[0];
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const name = document.getElementById('doctorName').value;
+      const specialty = document.getElementById('doctorSpecialty').value;
+      const image = document.getElementById('doctorImage').value;
+
+      const newRow = table.insertRow();
+      newRow.innerHTML = `
+        <td>${name}</td>
+        <td>${specialty}</td>
+        <td>${image}</td>
+        <td class="actions">
+          <button>Edit</button>
+          <button class="delete">Delete</button>
+        </td>
+      `;
+
+      form.reset();
+    });
+
+    // Delete button functionality
+    table.addEventListener('click', function (e) {
+      if (e.target.classList.contains('delete')) {
+        const row = e.target.closest('tr');
+        table.deleteRow(row.rowIndex - 1);
+      }
+    });
+  </script>
+
+</body>
+</html>
