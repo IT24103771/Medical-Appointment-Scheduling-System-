@@ -11,17 +11,15 @@
       private String lastName;
       private String notes;
       private String phone;
+      private String urgencyLevel;
 
-//        public UrgencyLevel getUrgencyLevel() {
-//            return urgencyLevel;
-//        }
-//
-//        public void setUrgencyLevel(UrgencyLevel urgencyLevel) {
-//            this.urgencyLevel = urgencyLevel;
-//        }
-//
-//        // private String urgencyLevel;
-//        private UrgencyLevel urgencyLevel;
+        public String getUrgencyLevel() {
+            return urgencyLevel;
+        }
+
+        public void setUrgencyLevel(String urgencyLevel) {
+            this.urgencyLevel = urgencyLevel;
+        }
 
         public String getAppointmentDate() {
             return appointmentDate;
@@ -95,9 +93,8 @@
             this.phone = phone;
         }
 
-//        public int compareTo(Appointment other) {
-//            return other.urgencyLevel.ordinal() - this.urgencyLevel.ordinal(); // higher urgency comes first
-//        }
-    }
+       }
+
+
 
 
