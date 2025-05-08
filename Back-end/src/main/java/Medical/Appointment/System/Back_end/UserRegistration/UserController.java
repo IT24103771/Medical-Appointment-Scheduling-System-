@@ -56,7 +56,7 @@ public class CorsConfig implements WebMvcConfigurer{
         System.out.println("New user registration: " +user.getUserName());
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(
-                "C:\\Users\\User\\Documents\\Projects\\Medical Appointment System\\Back-end\\Back-end\\src\\main\\java\\Medical\\Appointment\\System\\Back_end\\UserRegistration\\Registration.txt",
+                "C:\\Users\\User\\Documents\\Projects\\Medical-Appointment-Scheduling-System-\\Back-end\\src\\main\\java\\Medical\\Appointment\\System\\Back_end\\UserRegistration\\Registration.txt",
                 true))) {
             writer.write(textMsg);
             return "User registered successfully!";

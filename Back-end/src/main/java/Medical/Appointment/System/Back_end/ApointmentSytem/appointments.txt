@@ -1,7 +1,18 @@
-Appointment for Mohamed Shahid Department  cardiology
-. Date 2025-04-19
-. Doctor  dr-williams
-. Email shahid7799p@gmail.com
-. Phone 0770745713
-. Notes ytut765765476
-. Urgency Level routine
+=== URGENCY LEVEL: EMERGENCY ===
+Appointment for Mohamed werwer
+Department: cardiology
+Date: 2025-05-28
+Doctor: dr-williams
+Email: shahid7799p@gmail.com
+Phone: 2132312
+Notes: 21321
+
+== URGENCY LEVEL: ROUTINE ===
+Appointment for Mohamed Shahid
+Department: pediatrics
+Date: 2025-05-22
+Doctor: dr-smith
+Email: shahid7799p@gmail.com
+Phone: 0770745713
+Notes: qwewqe
+

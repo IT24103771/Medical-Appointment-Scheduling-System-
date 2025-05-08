@@ -1,22 +1,22 @@
 New User Registration:
 Username: shahii__Azad
-Password: 232
-Full Name: asd
+Password: asda
+Full Name: asdsa
 Address: bnmbnmbm
 Phone Number: 5675675
- Age: 23
- Gender: sdasd
- Email: asdsad
-Registration Date: 2025-04-12
+ Age: 22
+ Gender: male
+ Email: asd
+Registration Date: 2025-05-01
 
 New User Registration:
 Username: shahii__Azad
-Password: 232
-Full Name: asd
-Address: bnmbnmbm
+Password: sadas
+Full Name: asdsa
+Address: asdasd
 Phone Number: 5675675
- Age: 23
- Gender: sdasd
- Email: asdsad
-Registration Date: 2025-04-12
+ Age: 4
+ Gender: edgfdgfgh
+ Email: 234
+Registration Date: 2025-05-07
 
