@@ -26,7 +26,7 @@
       box-shadow: 0 0 5px rgba(0,0,0,0.1);
     }
 
-    input, select {
+    input {
       width: 100%;
       padding: 10px;
       margin: 10px 0;
@@ -92,51 +92,66 @@
         <th>Actions</th>
       </tr>
     </thead>
-    <tbody>
-      <!-- Example Doctor Row -->
-      <tr>
-        <td>Dr. M.W.M UMAIR</td>
-        <td>Cardiologist</td>
-        <td>umair.png</td>
-        <td class="actions">
-          <button>Edit</button>
-          <button class="delete">Delete</button>
-        </td>
-      </tr>
-    </tbody>
+    <tbody></tbody>
   </table>
 
   <script>
     const form = document.getElementById('addDoctorForm');
-    const table = document.getElementById('doctorsTable').getElementsByTagName('tbody')[0];
+    const tableBody = document.querySelector('#doctorsTable tbody');
+    let doctors = JSON.parse(localStorage.getItem('doctors')) || [];
+
+    function saveDoctors() {
+      localStorage.setItem('doctors', JSON.stringify(doctors));
+      renderDoctors();
+    }
+
+    function renderDoctors() {
+      tableBody.innerHTML = '';
+      doctors.forEach((doctor, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${doctor.name}</td>
+          <td>${doctor.specialty}</td>
+          <td>${doctor.image}</td>
+          <td class="actions">
+            <button onclick="editDoctor(${index})">Edit</button>
+            <button class="delete" onclick="deleteDoctor(${index})">Delete</button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    function deleteDoctor(index) {
+      if (confirm("Delete this doctor?")) {
+        doctors.splice(index, 1);
+        saveDoctors();
+      }
+    }
+
+    function editDoctor(index) {
+      const doctor = doctors[index];
+      document.getElementById('doctorName').value = doctor.name;
+      document.getElementById('doctorSpecialty').value = doctor.specialty;
+      document.getElementById('doctorImage').value = doctor.image;
+      doctors.splice(index, 1); // remove for now
+      saveDoctors();
+    }
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      const name = document.getElementById('doctorName').value;
-      const specialty = document.getElementById('doctorSpecialty').value;
-      const image = document.getElementById('doctorImage').value;
+      const name = document.getElementById('doctorName').value.trim();
+      const specialty = document.getElementById('doctorSpecialty').value.trim();
+      const image = document.getElementById('doctorImage').value.trim();
 
-      const newRow = table.insertRow();
-      newRow.innerHTML = `
-        <td>${name}</td>
-        <td>${specialty}</td>
-        <td>${image}</td>
-        <td class="actions">
-          <button>Edit</button>
-          <button class="delete">Delete</button>
-        </td>
-      `;
-
-      form.reset();
-    });
-
-    // Delete button functionality
-    table.addEventListener('click', function (e) {
-      if (e.target.classList.contains('delete')) {
-        const row = e.target.closest('tr');
-        table.deleteRow(row.rowIndex - 1);
+      if (name && specialty && image) {
+        doctors.push({ name, specialty, image });
+        saveDoctors();
+        form.reset();
       }
     });
+
+    renderDoctors();
   </script>
 
 </body>

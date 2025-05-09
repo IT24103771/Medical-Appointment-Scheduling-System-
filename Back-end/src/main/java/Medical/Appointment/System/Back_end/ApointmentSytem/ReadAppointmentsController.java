@@ -9,7 +9,7 @@ import java.nio.file.*;
 @RequestMapping("/api/appointments")
 public class ReadAppointmentsController {
 
-    private final String filePath = "C:\\Users\\User\\Documents\\Projects\\Medical-Appointment-Scheduling-System-\\Back-end\\src\\main\\java\\Medical\\Appointment\\System\\Back_end\\ApointmentSytem\\appointments.txt";
+    private final String filePath = "C:\\Users\\Ahamed\\OneDrive\\Documents\\OOP Project\\Medical-Appointment-Scheduling-System-\\Back-end\\src\\main\\java\\Medical\\Appointment\\System\\Back_end\\ApointmentSytem\\appointments.txt";
 
     @GetMapping("/all")
     public String getAllAppointments() {
