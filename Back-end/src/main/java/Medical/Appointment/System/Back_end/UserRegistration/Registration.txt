@@ -20,3 +20,14 @@ Phone Number: 5675675
  Email: 234
 Registration Date: 2025-05-07
 
+New User Registration:
+Username: IT24103157
+Password: 02154782
+Full Name: RASHID AHAMED
+Address: kurunegala 
+Phone Number: 0771611903
+ Age: 21
+ Gender: Male
+ Email: rashidnaleef12@gmail.com 
+Registration Date: 2025-05-09
+
