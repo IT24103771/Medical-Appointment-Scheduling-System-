@@ -45,32 +45,6 @@
       padding: 30px;
     }
 
-    .dashboard-cards {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    .card {
-      background-color: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      flex: 1;
-      min-width: 200px;
-    }
-
-    .card h3 {
-      margin-bottom: 10px;
-      color: #1e293b;
-    }
-
-    .card p {
-      font-size: 1.5em;
-      font-weight: bold;
-      color: #0f172a;
-    }
-
     .appointments-section {
       margin-top: 40px;
     }
@@ -91,21 +65,30 @@
       font-family: monospace;
     }
 
-    @media (max-width: 768px) {
-      .sidebar {
-        width: 100%;
-        height: auto;
-        position: relative;
-      }
-
-      .main-content {
-        margin-left: 0;
-      }
-
-      .dashboard-cards {
-        flex-direction: column;
-      }
+    .appointment-item {
+      padding: 15px;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 10px;
     }
+
+    .delete-button {
+      background-color: #ff0000;
+      color: white;
+      padding: 5px 10px;
+      border: none;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+
+    .delete-button:hover {
+      background-color: #e60000;
+    }
+
+    .appointment-details {
+      margin-top: 10px;
+      font-size: 0.9em;
+    }
+
   </style>
 </head>
 <body>
@@ -114,6 +97,8 @@
     <a href="#">Dashboard</a>
     <a href="doctorManagement.html">Manage Doctors</a>
     <a href="#">Appointments</a>
+    <a href="timeScheduling.html">Time Scheduling</a>
+    <a href="UserInfo.html">User Informations</a>
     <a href="#">Patients</a>
     <a href="#">Reports</a>
   </div>
@@ -121,23 +106,8 @@
   <div class="main-content">
     <h1>Dashboard Overview</h1>
 
-    <div class="dashboard-cards">
-      <div class="card">
-        <h3>Total Doctors</h3>
-        <p>12</p>
-      </div>
-      <div class="card">
-        <h3>Total Patients</h3>
-        <p>85</p>
-      </div>
-      <div class="card">
-        <h3>Today's Appointments</h3>
-        <p>24</p>
-      </div>
-    </div>
-
     <div class="appointments-section">
-      <h2>All Appointments (from File)</h2>
+      <h2>All Appointments</h2>
       <div class="appointments-box" id="appointmentsBox">
         Loading appointments...
       </div>
@@ -145,16 +115,90 @@
   </div>
 
   <script>
-    // Fetch the appointments text from backend
+    // Fetch the appointments from backend
     fetch('http://localhost:8080/api/appointments/all')
       .then(response => response.text())
       .then(data => {
-        document.getElementById('appointmentsBox').textContent = data;
+        const appointments = parseAppointments(data); // Custom parsing logic
+        document.getElementById('appointmentsBox').innerHTML = renderAppointments(appointments);
       })
       .catch(error => {
         document.getElementById('appointmentsBox').textContent = 'Failed to load appointments: ' + error;
         console.error(error);
       });
+  
+    // Helper function to parse the appointment data
+    function parseAppointments(data) {
+      const appointments = [];
+      const entries = data.split('=== URGENCY LEVEL:');
+      
+      entries.forEach(entry => {
+        if (entry.trim()) {
+          const appointment = {};
+          const lines = entry.split('\n');
+          
+          lines.forEach(line => {
+            if (line.startsWith('Appointment for')) {
+              const name = line.split('for')[1].trim();
+              appointment.name = name;
+            } else if (line.startsWith('Date:')) {
+              appointment.date = line.split(':')[1].trim();
+            } else if (line.startsWith('Doctor:')) {
+              appointment.doctor = line.split(':')[1].trim();
+            } else if (line.startsWith('Department:')) {
+              appointment.department = line.split(':')[1].trim();
+            } else if (line.startsWith('Email:')) {
+              appointment.email = line.split(':')[1].trim();
+            } else if (line.startsWith('Phone:')) {
+              appointment.phone = line.split(':')[1].trim();
+            } else if (line.startsWith('Notes:')) {
+              appointment.notes = line.split(':')[1].trim();
+            }
+          });
+          appointments.push(appointment);
+        }
+      });
+      
+      return appointments;
+    }
+  
+    // Helper function to render the appointments
+    function renderAppointments(appointments) {
+      return appointments.map(appointment => {
+        return `
+          <div class="appointment-item">
+            <div><strong>${appointment.name}</strong></div>
+            <div><strong>Date:</strong> ${appointment.date}</div>
+            <div><strong>Doctor:</strong> ${appointment.doctor}</div>
+            <div><strong>Department:</strong> ${appointment.department}</div>
+            <div><strong>Email:</strong> ${appointment.email}</div>
+            <div><strong>Phone:</strong> ${appointment.phone}</div>
+            <div><strong>Notes:</strong> ${appointment.notes}</div>
+            <button class="delete-button" onclick="deleteAppointment('${appointment.email}', '${appointment.date}')">Delete</button>
+          </div>
+        `;
+      }).join('');
+    }
+  
+    // Delete function - delete a specific appointment
+    function deleteAppointment(email, date) {
+      fetch(`http://localhost:8080/api/appointments/delete?email=${email}&appointmentDate=${date}`, {
+        method: 'DELETE',
+      })
+      .then(response => {
+        if (response.ok) {
+          alert('Appointment deleted!');
+          location.reload(); // Reload to refresh the appointments
+        } else {
+          alert('Failed to delete appointment.');
+        }
+      })
+      .catch(error => {
+        alert('Error deleting appointment: ' + error);
+        console.error(error);
+      });
+    }
   </script>
+  
 </body>
 </html>
