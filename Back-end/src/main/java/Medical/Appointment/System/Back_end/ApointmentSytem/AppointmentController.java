@@ -14,6 +14,7 @@ public class AppointmentController {
         String urgency = appointment.getUrgencyLevel().toLowerCase();  // normalize
         String filePath = "C:\\Users\\User\\Documents\\OOP project\\Medical-Appointment-Scheduling-System-\\Back-end\\src\\main\\java\\Medical\\Appointment\\System\\Back_end\\ApointmentSytem\\appointments.txt";
 
+
         String textMsg = String.format(
                 "=== URGENCY LEVEL: %s ===%n" +
                         "Appointment for %s %s%nDepartment: %s%nDate: %s%nDoctor: %s%nEmail: %s%nPhone: %s%nNotes: %s%n%n",

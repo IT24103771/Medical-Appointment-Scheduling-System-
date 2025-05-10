@@ -11,6 +11,7 @@ public class ReadAppointmentsController {
 
     private final String filePath = "C:\\Users\\User\\Documents\\OOP project\\Medical-Appointment-Scheduling-System-\\Back-end\\src\\main\\java\\Medical\\Appointment\\System\\Back_end\\ApointmentSytem\\appointments.txt";
 
+
     @GetMapping("/all")
     public String getAllAppointments() {
         try {
