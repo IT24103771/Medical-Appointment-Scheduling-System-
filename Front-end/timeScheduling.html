@@ -1,4 +1,3 @@
-<!-- admin-doctor-availability.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +7,7 @@
     body { font-family: Arial; padding: 30px; background: #f0f0f0; }
     h2 { color: #2c3e50; }
     input, select { margin: 5px; padding: 8px; }
-    button { padding: 6px 12px; margin-top: 10px; }
+    button { padding: 6px 12px; margin: 5px; }
     table { width: 100%; border-collapse: collapse; margin-top: 25px; background: white; }
     th, td { padding: 10px; border: 1px solid #ccc; }
   </style>
@@ -21,7 +20,7 @@
 <h3>Assign Available Time Slot</h3>
 <select id="doctorSelect"></select>
 <input type="datetime-local" id="timeSlot">
-<button onclick="addTimeSlot()">Add Time Slot</button>
+<button id="addBtn" onclick="addTimeSlot()">Add Time Slot</button>
 
 <!-- Time Slots Table -->
 <h3>Doctor Time Slots</h3>
@@ -39,6 +38,8 @@
 <script>
   const doctorData = JSON.parse(localStorage.getItem('doctors')) || [];
   const timeSlots = JSON.parse(localStorage.getItem('timeSlots')) || [];
+
+  let editIndex = -1; // Track which slot is being edited
 
   function renderDoctorOptions() {
     const select = document.getElementById('doctorSelect');
@@ -59,8 +60,18 @@
   function addTimeSlot() {
     const doctor = document.getElementById('doctorSelect').value;
     const time = document.getElementById('timeSlot').value;
+
     if (doctor && time) {
-      timeSlots.push({ doctor, time });
+      if (editIndex === -1) {
+        // Add new
+        timeSlots.push({ doctor, time });
+      } else {
+        // Update existing
+        timeSlots[editIndex] = { doctor, time };
+        editIndex = -1;
+        document.getElementById('addBtn').textContent = 'Add Time Slot';
+      }
+
       saveSlots();
       document.getElementById('timeSlot').value = '';
     }
@@ -74,7 +85,10 @@
       row.innerHTML = `
         <td>${slot.doctor}</td>
         <td>${new Date(slot.time).toLocaleString()}</td>
-        <td><button onclick="deleteSlot(${index})">Delete</button></td>
+        <td>
+          <button onclick="editSlot(${index})">Edit</button>
+          <button onclick="deleteSlot(${index})">Delete</button>
+        </td>
       `;
       tbody.appendChild(row);
     });
@@ -85,6 +99,14 @@
       timeSlots.splice(index, 1);
       saveSlots();
     }
+  }
+
+  function editSlot(index) {
+    const slot = timeSlots[index];
+    document.getElementById('doctorSelect').value = slot.doctor;
+    document.getElementById('timeSlot').value = slot.time;
+    editIndex = index;
+    document.getElementById('addBtn').textContent = 'Update Slot';
   }
 
   // Initial Load
