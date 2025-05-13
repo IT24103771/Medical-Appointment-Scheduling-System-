@@ -5,16 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin Dashboard</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       background-color: #f1f5f9;
     }
-
     .sidebar {
       height: 100vh;
       width: 220px;
@@ -23,72 +19,69 @@
       color: white;
       padding: 20px 0;
     }
-
     .sidebar h2 {
       text-align: center;
       margin-bottom: 30px;
     }
-
     .sidebar a {
       display: block;
       padding: 12px 20px;
       color: white;
       text-decoration: none;
     }
-
     .sidebar a:hover {
       background-color: #334155;
     }
-
     .main-content {
       margin-left: 220px;
       padding: 30px;
     }
-
     .appointments-section {
       margin-top: 40px;
     }
-
     .appointments-section h2 {
       margin-bottom: 15px;
       color: #1e293b;
     }
-
     .appointments-box {
       background-color: white;
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      max-height: 400px;
+      max-height: 600px;
       overflow-y: auto;
       white-space: pre-wrap;
       font-family: monospace;
     }
-
     .appointment-item {
       padding: 15px;
       border-bottom: 1px solid #ddd;
       margin-bottom: 10px;
     }
-
-    .delete-button {
-      background-color: #ff0000;
+    .button {
+      background-color: #0077cc;
       color: white;
-      padding: 5px 10px;
+      padding: 6px 12px;
       border: none;
       cursor: pointer;
+      margin-right: 5px;
       margin-top: 5px;
     }
-
-    .delete-button:hover {
-      background-color: #e60000;
+    .button.delete {
+      background-color: #ff0000;
     }
-
-    .appointment-details {
-      margin-top: 10px;
-      font-size: 0.9em;
+    .button:hover {
+      opacity: 0.9;
     }
-
+    form input, form select {
+      display: block;
+      margin-bottom: 10px;
+      padding: 8px;
+      width: 100%;
+    }
+    form button {
+      padding: 8px 16px;
+    }
   </style>
 </head>
 <body>
@@ -97,9 +90,8 @@
     <a href="#">Dashboard</a>
     <a href="doctorManagement.html">Manage Doctors</a>
     <a href="#">Appointments</a>
-     <a href="timeScheduling.html">Time Scheduling</a>
+    <a href="timeScheduling.html">Time Scheduling</a>
     <a href="UserInfo.html">User Informations</a>
-
     <a href="#">Patients</a>
     <a href="#">Reports</a>
     <a href="memberManagement.html">Manage Members</a>
@@ -107,7 +99,6 @@
 
   <div class="main-content">
     <h1>Dashboard Overview</h1>
-
     <div class="appointments-section">
       <h2>All Appointments</h2>
       <div class="appointments-box" id="appointmentsBox">
@@ -117,90 +108,126 @@
   </div>
 
   <script>
-    // Fetch the appointments from backend
+    let currentEdit = null;
+
     fetch('http://localhost:8080/api/appointments/all')
       .then(response => response.text())
       .then(data => {
-        const appointments = parseAppointments(data); // Custom parsing logic
+        const appointments = parseAppointments(data);
         document.getElementById('appointmentsBox').innerHTML = renderAppointments(appointments);
       })
       .catch(error => {
         document.getElementById('appointmentsBox').textContent = 'Failed to load appointments: ' + error;
-        console.error(error);
       });
-  
-    // Helper function to parse the appointment data
+
     function parseAppointments(data) {
       const appointments = [];
       const entries = data.split('=== URGENCY LEVEL:');
-      
       entries.forEach(entry => {
         if (entry.trim()) {
           const appointment = {};
-          const lines = entry.split('\n');
-          
+          const lines = entry.trim().split('\n');
+          appointment.urgency = lines[0]?.trim();
           lines.forEach(line => {
-            if (line.startsWith('Appointment for')) {
-              const name = line.split('for')[1].trim();
-              appointment.name = name;
-            } else if (line.startsWith('Date:')) {
-              appointment.date = line.split(':')[1].trim();
-            } else if (line.startsWith('Doctor:')) {
-              appointment.doctor = line.split(':')[1].trim();
-            } else if (line.startsWith('Department:')) {
-              appointment.department = line.split(':')[1].trim();
-            } else if (line.startsWith('Email:')) {
-              appointment.email = line.split(':')[1].trim();
-            } else if (line.startsWith('Phone:')) {
-              appointment.phone = line.split(':')[1].trim();
-            } else if (line.startsWith('Notes:')) {
-              appointment.notes = line.split(':')[1].trim();
-            }
+            if (line.startsWith('Appointment for')) appointment.name = line.split('for')[1].trim();
+            else if (line.startsWith('Department:')) appointment.department = line.split(':')[1].trim();
+            else if (line.startsWith('Date:')) appointment.date = line.split(':')[1].trim();
+            else if (line.startsWith('Doctor:')) appointment.doctor = line.split(':')[1].trim();
+            else if (line.startsWith('Email:')) appointment.email = line.split(':')[1].trim();
+            else if (line.startsWith('Phone:')) appointment.phone = line.split(':')[1].trim();
+            else if (line.startsWith('Notes:')) appointment.notes = line.split(':')[1].trim();
           });
           appointments.push(appointment);
         }
       });
-      
       return appointments;
     }
-  
-    // Helper function to render the appointments
+
     function renderAppointments(appointments) {
-      return appointments.map(appointment => {
-        return `
-          <div class="appointment-item">
-            <div><strong>${appointment.name}</strong></div>
-            <div><strong>Date:</strong> ${appointment.date}</div>
-            <div><strong>Doctor:</strong> ${appointment.doctor}</div>
-            <div><strong>Department:</strong> ${appointment.department}</div>
-            <div><strong>Email:</strong> ${appointment.email}</div>
-            <div><strong>Phone:</strong> ${appointment.phone}</div>
-            <div><strong>Notes:</strong> ${appointment.notes}</div>
-            <button class="delete-button" onclick="deleteAppointment('${appointment.email}', '${appointment.date}')">Delete</button>
-          </div>
-        `;
-      }).join('');
+      return appointments.map(app => `
+        <div class="appointment-item">
+          <div><strong>${app.name}</strong></div>
+          <div><strong>Date:</strong> ${app.date}</div>
+          <div><strong>Doctor:</strong> ${app.doctor}</div>
+          <div><strong>Department:</strong> ${app.department}</div>
+          <div><strong>Email:</strong> ${app.email}</div>
+          <div><strong>Phone:</strong> ${app.phone}</div>
+          <div><strong>Notes:</strong> ${app.notes}</div>
+          <div><strong>Urgency:</strong> ${app.urgency}</div>
+          <button class="button delete" onclick="deleteAppointment('${app.email}', '${app.date}')">Delete</button>
+          <button class="button" onclick='showEditForm("${encodeURIComponent(JSON.stringify(app))}")'>Edit</button>
+        </div>
+      `).join('');
     }
-  
-    // Delete function - delete a specific appointment
+
     function deleteAppointment(email, date) {
       fetch(`http://localhost:8080/api/appointments/delete?email=${email}&appointmentDate=${date}`, {
-        method: 'DELETE',
+        method: 'DELETE'
       })
       .then(response => {
         if (response.ok) {
-          alert('Appointment deleted!');
-          location.reload(); // Reload to refresh the appointments
+          alert("Deleted!");
+          location.reload();
         } else {
-          alert('Failed to delete appointment.');
+          alert("Delete failed.");
         }
+      });
+    }
+
+    function showEditForm(appointmentJson) {
+      const app = JSON.parse(decodeURIComponent(appointmentJson));
+      currentEdit = app;
+
+      const formHtml = `
+        <h3>Edit Appointment</h3>
+        <form onsubmit="submitEdit(event)">
+          <input type="text" id="editFirstName" placeholder="First Name" required value="${app.name.split(' ')[0]}">
+          <input type="text" id="editLastName" placeholder="Last Name" required value="${app.name.split(' ')[1]}">
+          <input type="text" id="editDepartment" placeholder="Department" required value="${app.department}">
+          <input type="date" id="editDate" required value="${app.date}">
+          <input type="text" id="editDoctor" placeholder="Doctor" required value="${app.doctor}">
+          <input type="email" id="editEmail" required value="${app.email}" readonly>
+          <input type="text" id="editPhone" placeholder="Phone" required value="${app.phone}">
+          <input type="text" id="editNotes" placeholder="Notes" value="${app.notes}">
+          <select id="editUrgency">
+            <option ${app.urgency.toLowerCase() === 'emergency' ? 'selected' : ''}>Emergency</option>
+            <option ${app.urgency.toLowerCase() === 'urgent' ? 'selected' : ''}>Urgent</option>
+            <option ${app.urgency.toLowerCase() === 'routine' ? 'selected' : ''}>Routine</option>
+          </select>
+          <button class="button" type="submit">Save Changes</button>
+        </form>
+      `;
+      document.getElementById('appointmentsBox').innerHTML = formHtml;
+    }
+
+    function submitEdit(event) {
+      event.preventDefault();
+      const updatedAppointment = {
+        firstName: document.getElementById('editFirstName').value,
+        lastName: document.getElementById('editLastName').value,
+        department: document.getElementById('editDepartment').value,
+        appointmentDate: document.getElementById('editDate').value,
+        doctor: document.getElementById('editDoctor').value,
+        email: document.getElementById('editEmail').value,
+        phone: document.getElementById('editPhone').value,
+        notes: document.getElementById('editNotes').value,
+        urgencyLevel: document.getElementById('editUrgency').value
+      };
+
+      fetch(`http://localhost:8080/api/appointments/edit?email=${currentEdit.email}&date=${currentEdit.date}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedAppointment)
       })
-      .catch(error => {
-        alert('Error deleting appointment: ' + error);
-        console.error(error);
+      .then(res => res.text())
+      .then(msg => {
+        alert(msg);
+        location.reload();
+      })
+      .catch(err => {
+        alert("Update failed: " + err);
       });
     }
   </script>
-  
 </body>
 </html>
