@@ -29,6 +29,7 @@
                 },
                 body: JSON.stringify(formData)
             });
+            window.location.href = "login.html"; // Replace with your dashboard or desired page
 
             // if (response.ok) {
             //     const result = await response.json();
