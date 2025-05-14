@@ -57,7 +57,7 @@ public class CorsConfig implements WebMvcConfigurer{
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(
 
-                "C:\\Users\\User\\Documents\\OOP project\\Medical-Appointment-Scheduling-System-\\Back-end\\src\\main\\java\\Medical\\Appointment\\System\\Back_end\\UserRegistration\\Registration.txt",
+                "src/main/java/Medical/Appointment/System/Back_end/UserRegistration/Registration.txt",
 
                 true))) {
             writer.write(textMsg);
