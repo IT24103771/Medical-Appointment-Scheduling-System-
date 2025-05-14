@@ -12,7 +12,7 @@ public class AppointmentController {
     @PostMapping("/save")
     public String saveAppointment(@RequestBody Appointment appointment) {
         String urgency = appointment.getUrgencyLevel().toLowerCase();  // normalize
-        String filePath = "C:\\Users\\User\\Documents\\OOP project\\Medical-Appointment-Scheduling-System-\\Back-end\\src\\main\\java\\Medical\\Appointment\\System\\Back_end\\ApointmentSytem\\appointments.txt";
+        String filePath = "src/main/java/Medical/Appointment/System/Back_end/ApointmentSytem/appointments.txt";
 
 
         String textMsg = String.format(
