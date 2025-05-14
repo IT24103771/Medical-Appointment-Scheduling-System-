@@ -1,5 +1,6 @@
 package Medical.Appointment.System.Back_end.userLoginAndadminLogin;
 
+import Medical.Appointment.System.Back_end.Constents;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.BufferedReader;
@@ -10,16 +11,16 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api")
 public class LoginController {
-
-    private final String FILE_PATH =
-            "C:\\Users\\User\\Documents\\OOP project\\Medical-Appointment-Scheduling-System-\\Back-end\\src\\main\\java\\Medical\\Appointment\\System\\Back_end\\UserRegistration\\Registration.txt";
+    Constents constents = new Constents();
+//    private final String FILE_PATH =
+//            "C:\\Users\\User\\Documents\\OOP project\\Medical-Appointment-Scheduling-System-\\Back-end\\src\\main\\java\\Medical\\Appointment\\System\\Back_end\\UserRegistration\\Registration.txt";
 
     @PostMapping("/login")
     public String loginUser(@RequestBody Login login) {
         String username = login.getUserName();
         String password = login.getPassword();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(constents.usersListFilePath))) {
             String line;
             String currentUsername = null;
             String currentPassword = null;
