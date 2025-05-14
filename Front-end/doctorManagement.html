@@ -98,14 +98,8 @@
   <script>
     const form = document.getElementById('addDoctorForm');
     const tableBody = document.querySelector('#doctorsTable tbody');
-    let doctors = JSON.parse(localStorage.getItem('doctors')) || [];
-
-    function saveDoctors() {
-      localStorage.setItem('doctors', JSON.stringify(doctors));
-      renderDoctors();
-    }
-
-    function renderDoctors() {
+  
+    function renderDoctors(doctors) {
       tableBody.innerHTML = '';
       doctors.forEach((doctor, index) => {
         const row = document.createElement('tr');
@@ -121,38 +115,52 @@
         tableBody.appendChild(row);
       });
     }
-
+  
+    function loadDoctors() {
+      fetch('http://localhost:8080/api/doctors/all')
+        .then(res => res.json())
+        .then(renderDoctors)
+        .catch(err => console.error('Failed to fetch doctors:', err));
+    }
+  
     function deleteDoctor(index) {
-      if (confirm("Delete this doctor?")) {
-        doctors.splice(index, 1);
-        saveDoctors();
-      }
+      fetch(`http://localhost:8080/api/doctors/delete/${index}`, { method: 'DELETE' })
+        .then(loadDoctors);
     }
-
+  
     function editDoctor(index) {
-      const doctor = doctors[index];
-      document.getElementById('doctorName').value = doctor.name;
-      document.getElementById('doctorSpecialty').value = doctor.specialty;
-      document.getElementById('doctorImage').value = doctor.image;
-      doctors.splice(index, 1); // remove for now
-      saveDoctors();
+      fetch(`http://localhost:8080/api/doctors/all`)
+        .then(res => res.json())
+        .then(doctors => {
+          const doctor = doctors[index];
+          document.getElementById('doctorName').value = doctor.name;
+          document.getElementById('doctorSpecialty').value = doctor.specialty;
+          document.getElementById('doctorImage').value = doctor.image;
+          deleteDoctor(index);
+        });
     }
-
+  
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       const name = document.getElementById('doctorName').value.trim();
       const specialty = document.getElementById('doctorSpecialty').value.trim();
       const image = document.getElementById('doctorImage').value.trim();
-
+  
       if (name && specialty && image) {
-        doctors.push({ name, specialty, image });
-        saveDoctors();
-        form.reset();
+        fetch('http://localhost:8080/api/doctors/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, specialty, image })
+        })
+        .then(() => {
+          form.reset();
+          loadDoctors();
+        });
       }
     });
-
-    renderDoctors();
+  
+    loadDoctors();
   </script>
-
+  
 </body>
 </html>

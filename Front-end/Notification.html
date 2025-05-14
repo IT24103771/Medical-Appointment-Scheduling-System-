@@ -2,8 +2,39 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Notifications</title>
-  <link rel="stylesheet" href="style.css">
+  <title>User Notification Center</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      padding: 20px;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #2c3e50;
+      text-align: center;
+    }
+    .notification-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    .notification-table th, .notification-table td {
+      padding: 12px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+    .notification-table th {
+      background-color: #f0f0f0;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -17,15 +48,49 @@
           <th>Method</th>
         </tr>
       </thead>
-      <tbody>
-        <!-- Example row; to be populated dynamically from file -->
-        <tr>
-          <td>2025-05-08</td>
-          <td>Your appointment is confirmed for 9:00 AM tomorrow.</td>
-          <td>Email</td>
-        </tr>
+      <tbody id="notificationBody">
+        <!-- Notifications will be inserted here -->
       </tbody>
     </table>
   </div>
+
+  <script>
+    // Retrieve the username from localStorage after login
+    const username = localStorage.getItem("username"); // Ensure this is set during login
+
+    if (!username) {
+      alert("Username not found. Please log in again.");
+    } else {
+      // Fetch notifications for the logged-in user
+      fetch(`http://localhost:8080/api/notifications/user/${username}`)
+        .then(res => res.json())
+        .then(notifications => {
+          const tbody = document.getElementById("notificationBody");
+          tbody.innerHTML = ""; // Clear previous data
+
+          // If no notifications, show a message
+          if (!Array.isArray(notifications) || notifications.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="3">No notifications found.</td></tr>`;
+            return;
+          }
+
+          // Populate table with notifications
+          notifications.forEach(notification => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${notification.date}</td>
+              <td>${notification.message}</td>
+              <td>${notification.method}</td>
+            `;
+            tbody.appendChild(row);
+          });
+        })
+        .catch(err => {
+          console.error("Failed to load notifications:", err);
+          document.getElementById("notificationBody").innerHTML =
+            `<tr><td colspan="3">Error loading notifications.</td></tr>`;
+        });
+    }
+  </script>
 </body>
 </html>

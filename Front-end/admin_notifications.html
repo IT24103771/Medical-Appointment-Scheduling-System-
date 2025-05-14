@@ -3,51 +3,143 @@
 <head>
   <meta charset="UTF-8">
   <title>Admin Notification Management</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8fafc;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    h1, h2 {
+      color: #1e293b;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #10b981;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 30px;
+      border-collapse: collapse;
+      background: #fff;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: left;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <h1>Admin - Manage Notifications</h1>
 
-    <form class="notification-form">
-      <label for="recipient">Recipient Email / Phone:</label>
+    <form class="notification-form" id="notificationForm">
+      <label for="recipient">Recipient User Name:</label>
       <input type="text" id="recipient" name="recipient" required>
 
       <label for="message">Message:</label>
       <textarea id="message" name="message" rows="3" required></textarea>
 
-      <label for="method">Method:</label>
-      <select id="method" name="method" required>
-        <option value="email">Email</option>
-        <option value="sms">SMS</option>
-      </select>
+      <label for="method">Method (e.g. Email, SMS):</label>
+      <input type="text" id="method" name="method" required>
 
       <button type="submit">Send Notification</button>
     </form>
 
     <h2>Sent Notifications</h2>
-    <table class="notification-table">
+    <table>
       <thead>
         <tr>
           <th>Recipient</th>
           <th>Message</th>
           <th>Method</th>
-          <th>Actions</th>
+          <th>Date</th>
         </tr>
       </thead>
-      <tbody>
-        <!-- Example row -->
-        <tr>
-          <td>jane@example.com</td>
-          <td>Your appointment is set for 4 PM today.</td>
-          <td>SMS</td>
-          <td>
-            <button class="edit-btn">Update</button>
-            <button class="delete-btn">Delete</button>
-          </td>
-        </tr>
-      </tbody>
+      <tbody id="notificationsTableBody"></tbody>
     </table>
   </div>
+
+  <script>
+    const form = document.getElementById('notificationForm');
+    const tableBody = document.getElementById('notificationsTableBody');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const recipient = document.getElementById('recipient').value.trim();
+      const message = document.getElementById('message').value.trim();
+      const method = document.getElementById('method').value.trim();
+
+      if (recipient && message && method) {
+        fetch('http://localhost:8080/api/notifications/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ recipient, message, method })
+        })
+        .then(() => {
+          form.reset();
+          loadNotifications();
+        });
+      }
+    });
+
+    function loadNotifications() {
+      fetch('http://localhost:8080/api/notifications/all')
+        .then(res => res.text())
+        .then(text => {
+          const entries = text.split("Notification:").slice(1); // ignore anything before first notification
+          tableBody.innerHTML = '';
+          entries.forEach(entry => {
+            const recipient = getValue(entry, "To:");
+            const message = getValue(entry, "Message:");
+            const method = getValue(entry, "Method:");
+            const date = getValue(entry, "DateTime:");
+
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${recipient}</td><td>${message}</td><td>${method}</td><td>${date}</td>`;
+            tableBody.appendChild(row);
+          });
+        });
+    }
+
+    function getValue(entry, key) {
+      const line = entry.split("\n").find(line => line.trim().startsWith(key));
+      return line ? line.replace(key, '').trim() : '';
+    }
+
+    loadNotifications();
+  </script>
 </body>
 </html>
