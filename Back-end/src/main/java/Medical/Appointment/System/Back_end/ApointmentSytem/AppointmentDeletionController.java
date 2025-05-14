@@ -1,6 +1,5 @@
 package Medical.Appointment.System.Back_end.ApointmentSytem;
 
-import Medical.Appointment.System.Back_end.Constents;
 import org.springframework.web.bind.annotation.*;
 import java.io.*;
 import java.nio.file.*;
@@ -9,14 +8,13 @@ import java.nio.file.*;
 @RestController
 @RequestMapping("/api/appointments")
 public class AppointmentDeletionController {
-    Constents constents = new Constents();
 
-   // private static final String FILE_PATH = "C:\\Users\\User\\Documents\\OOP project\\Medical-Appointment-Scheduling-System-\\Back-end\\src\\main\\java\\Medical\\Appointment\\System\\Back_end\\ApointmentSytem\\appointments.txt";
+    private static final String FILE_PATH = "C:\\Users\\User\\Documents\\OOP project\\Medical-Appointment-Scheduling-System-\\Back-end\\src\\main\\java\\Medical\\Appointment\\System\\Back_end\\ApointmentSytem\\appointments.txt";
 
     @DeleteMapping("/delete")
     public String deleteAppointment(@RequestParam String email, @RequestParam String appointmentDate) {
         try {
-            Path path = Paths.get(constents.appointmentFilePath);
+            Path path = Paths.get(FILE_PATH);
             if (!Files.exists(path)) {
                 return "Appointment file not found.";
             }
