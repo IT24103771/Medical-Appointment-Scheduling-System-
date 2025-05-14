@@ -2,6 +2,7 @@ package Medical.Appointment.System.Back_end.UserRegistration;
 
 
 
+import Medical.Appointment.System.Back_end.Constents;
 import org.springframework.web.bind.annotation.*;
 import java.io.*;
 import java.nio.file.*;
@@ -10,13 +11,13 @@ import java.nio.file.*;
 @RestController
 @RequestMapping("/api/users")
 public class UserDeletionController {
-
-    private static final String FILE_PATH = "C:\\Users\\User\\Documents\\OOP project\\Medical-Appointment-Scheduling-System-\\Back-end\\src\\main\\java\\Medical\\Appointment\\System\\Back_end\\UserRegistration\\Registration.txt";
+    Constents constents = new Constents();
+   // private static final String FILE_PATH = "C:\\Users\\User\\Documents\\OOP project\\Medical-Appointment-Scheduling-System-\\Back-end\\src\\main\\java\\Medical\\Appointment\\System\\Back_end\\UserRegistration\\Registration.txt";
 
     @DeleteMapping("/delete")
     public String deleteUser(@RequestParam String email, @RequestParam String username) {
         try {
-            Path path = Paths.get(FILE_PATH);
+            Path path = Paths.get(constents.usersListFilePath);
             if (!Files.exists(path)) {
                 return "User registration file not found.";
             }
