@@ -1,35 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Admin Notification Management</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manage Notifications</title>
   <style>
+    * { box-sizing: border-box; }
     body {
       font-family: Arial, sans-serif;
-      background-color: #f8fafc;
-      padding: 20px;
+      margin: 0;
+      background-color: #f1f5f9;
     }
-
-    .container {
-      max-width: 600px;
-      margin: auto;
-      background: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    .sidebar {
+      height: 100vh;
+      width: 220px;
+      position: fixed;
+      background-color: #1e293b;
+      color: white;
+      padding: 20px 0;
     }
-
-    h1, h2 {
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .sidebar a {
+      display: block;
+      padding: 12px 20px;
+      color: white;
+      text-decoration: none;
+    }
+    .sidebar a:hover {
+      background-color: #334155;
+    }
+    .main-content {
+      margin-left: 220px;
+      padding: 30px;
+    }
+    h1 {
       color: #1e293b;
     }
 
-    label {
+    form label {
       font-weight: bold;
       display: block;
       margin-top: 10px;
     }
 
-    input, textarea {
+    form input, form textarea {
       width: 100%;
       padding: 10px;
       margin-top: 5px;
@@ -38,7 +55,7 @@
       border-radius: 5px;
     }
 
-    button {
+    form button {
       background-color: #10b981;
       color: white;
       border: none;
@@ -52,6 +69,9 @@
       margin-top: 30px;
       border-collapse: collapse;
       background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
     th, td {
@@ -59,11 +79,26 @@
       padding: 10px;
       text-align: left;
     }
+
+    th {
+      background-color: #e2e8f0;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Admin - Manage Notifications</h1>
+  <div class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="admin.html">Dashboard</a>
+    <a href="doctorManagement.html">Manage Doctors</a>
+    <a href="timeScheduling.html">Time Scheduling</a>
+    <a href="UserInfo.html">User Informations</a>
+    <a href="#">Patients</a>
+    <a href="admin_contact_messages.html">Manage Contact Message</a>
+    <a href="admin_notifications.html">Manage Notification</a>
+  </div>
+
+  <div class="main-content">
+    <h1>Manage Notifications</h1>
 
     <form class="notification-form" id="notificationForm">
       <label for="recipient">Recipient User Name:</label>
@@ -111,6 +146,9 @@
         .then(() => {
           form.reset();
           loadNotifications();
+        })
+        .catch(err => {
+          alert("Error sending notification: " + err);
         });
       }
     });
@@ -119,7 +157,7 @@
       fetch('http://localhost:8080/api/notifications/all')
         .then(res => res.text())
         .then(text => {
-          const entries = text.split("Notification:").slice(1); // ignore anything before first notification
+          const entries = text.split("Notification:").slice(1); // skip the first line if not a notification
           tableBody.innerHTML = '';
           entries.forEach(entry => {
             const recipient = getValue(entry, "To:");
@@ -131,6 +169,9 @@
             row.innerHTML = `<td>${recipient}</td><td>${message}</td><td>${method}</td><td>${date}</td>`;
             tableBody.appendChild(row);
           });
+        })
+        .catch(err => {
+          tableBody.innerHTML = `<tr><td colspan="4">Failed to load notifications: ${err}</td></tr>`;
         });
     }
 
