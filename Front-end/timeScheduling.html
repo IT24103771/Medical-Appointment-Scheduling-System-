@@ -4,118 +4,202 @@
   <meta charset="UTF-8">
   <title>Admin - Doctor Availability</title>
   <style>
-    body { font-family: Arial; padding: 30px; background: #f0f0f0; }
-    h2 { color: #2c3e50; }
-    input, select { margin: 5px; padding: 8px; }
-    button { padding: 6px 12px; margin: 5px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 25px; background: white; }
-    th, td { padding: 10px; border: 1px solid #ccc; }
+    * { box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+
+    .sidebar {
+      height: 100vh;
+      width: 220px;
+      position: fixed;
+      background-color: #1e293b;
+      color: white;
+      padding: 20px 0;
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 12px 20px;
+      color: white;
+      text-decoration: none;
+    }
+
+    .sidebar a:hover {
+      background-color: #334155;
+    }
+
+    .main-content {
+      margin-left: 220px;
+      padding: 30px;
+    }
+
+    h2, h3 {
+      color: #2c3e50;
+    }
+
+    input, select {
+      margin: 5px;
+      padding: 8px;
+    }
+
+    button {
+      padding: 6px 12px;
+      margin: 5px;
+      background-color: #10b981;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 25px;
+      background: white;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+
+    td button {
+      background-color: #3b82f6;
+      margin-right: 5px;
+    }
+
+    td button:last-child {
+      background-color: #ef4444;
+    }
   </style>
 </head>
 <body>
 
-<h2>Admin Panel - Doctor Availability</h2>
+  <div class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="admin.html">Dashboard</a>
+    <a href="doctorManagement.html">Manage Doctors</a>
+    <a href="timeScheduling.html">Time Scheduling</a>
+    <a href="UserInfo.html">User Informations</a>
+    <a href="#">Patients</a>
+    <a href="admin_contact_messages.html">Manage Contact Message</a>
+    <a href="admin_notifications.html">Manage Notification</a>
+  </div>
 
-<h3>Assign Available Time Slot</h3>
-<select id="doctorSelect"></select>
-<input type="datetime-local" id="timeSlot">
-<button id="addBtn">Add Time Slot</button>
+  <div class="main-content">
+    <h2>Doctor Availability</h2>
 
-<h3>Doctor Time Slots</h3>
-<table>
-  <thead>
-    <tr>
-      <th>Doctor</th>
-      <th>Available Time</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody id="slotsTableBody"></tbody>
-</table>
+    <h3>Assign Available Time Slot</h3>
+    <select id="doctorSelect"></select>
+    <input type="datetime-local" id="timeSlot">
+    <button id="addBtn">Add Time Slot</button>
 
-<script>
-  let editIndex = -1;
-  let timeSlots = [];
+    <h3>Doctor Time Slots</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Doctor</th>
+          <th>Available Time</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="slotsTableBody"></tbody>
+    </table>
+  </div>
 
-  async function loadDoctors() {
-    const response = await fetch("http://localhost:8080/api/doctors/all");
-    const doctors = await response.json();
-    const select = document.getElementById('doctorSelect');
-    select.innerHTML = '';
-    doctors.forEach(doc => {
-      const option = document.createElement('option');
-      option.value = doc.name;
-      option.textContent = `${doc.name} (${doc.specialty})`;
-      select.appendChild(option);
-    });
-  }
+  <script>
+    let editIndex = -1;
+    let timeSlots = [];
 
-  async function loadTimeSlots() {
-    const response = await fetch("http://localhost:8080/api/timeslots");
-    timeSlots = await response.json();
-    renderSlots();
-  }
+    async function loadDoctors() {
+      const response = await fetch("http://localhost:8080/api/doctors/all");
+      const doctors = await response.json();
+      const select = document.getElementById('doctorSelect');
+      select.innerHTML = '';
+      doctors.forEach(doc => {
+        const option = document.createElement('option');
+        option.value = doc.name;
+        option.textContent = `${doc.name} (${doc.specialty})`;
+        select.appendChild(option);
+      });
+    }
 
-  function renderSlots() {
-    const tbody = document.getElementById('slotsTableBody');
-    tbody.innerHTML = '';
-    timeSlots.forEach((slot, index) => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${slot.doctor}</td>
-        <td>${new Date(slot.time).toLocaleString()}</td>
-        <td>
-          <button onclick="editSlot(${index})">Edit</button>
-          <button onclick="deleteSlot(${index})">Delete</button>
-        </td>
-      `;
-      tbody.appendChild(row);
-    });
-  }
+    async function loadTimeSlots() {
+      const response = await fetch("http://localhost:8080/api/timeslots");
+      timeSlots = await response.json();
+      renderSlots();
+    }
 
-  async function saveTimeSlot() {
-    const doctor = document.getElementById('doctorSelect').value;
-    const time = document.getElementById('timeSlot').value;
+    function renderSlots() {
+      const tbody = document.getElementById('slotsTableBody');
+      tbody.innerHTML = '';
+      timeSlots.forEach((slot, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${slot.doctor}</td>
+          <td>${new Date(slot.time).toLocaleString()}</td>
+          <td>
+            <button onclick="editSlot(${index})">Edit</button>
+            <button onclick="deleteSlot(${index})">Delete</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
 
-    if (!doctor || !time) return;
+    async function saveTimeSlot() {
+      const doctor = document.getElementById('doctorSelect').value;
+      const time = document.getElementById('timeSlot').value;
 
-    const payload = { doctor, time };
-    await fetch("http://localhost:8080/api/timeslots/save", {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
+      if (!doctor || !time) return;
 
-    await loadTimeSlots();
-    document.getElementById('timeSlot').value = '';
-    document.getElementById('addBtn').textContent = 'Add Time Slot';
-    editIndex = -1;
-  }
+      const payload = { doctor, time };
+      await fetch("http://localhost:8080/api/timeslots/save", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
 
-  function editSlot(index) {
-    const slot = timeSlots[index];
-    document.getElementById('doctorSelect').value = slot.doctor;
-    document.getElementById('timeSlot').value = slot.time;
-    editIndex = index;
-    document.getElementById('addBtn').textContent = 'Update Slot';
-  }
+      await loadTimeSlots();
+      document.getElementById('timeSlot').value = '';
+      document.getElementById('addBtn').textContent = 'Add Time Slot';
+      editIndex = -1;
+    }
 
-  async function deleteSlot(index) {
-    const slot = timeSlots[index];
-    await fetch("http://localhost:8080/api/timeslots/delete", {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(slot)
-    });
-    await loadTimeSlots();
-  }
+    function editSlot(index) {
+      const slot = timeSlots[index];
+      document.getElementById('doctorSelect').value = slot.doctor;
+      document.getElementById('timeSlot').value = slot.time;
+      editIndex = index;
+      document.getElementById('addBtn').textContent = 'Update Slot';
+    }
 
-  document.getElementById('addBtn').addEventListener('click', saveTimeSlot);
+    async function deleteSlot(index) {
+      const slot = timeSlots[index];
+      await fetch("http://localhost:8080/api/timeslots/delete", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(slot)
+      });
+      await loadTimeSlots();
+    }
 
-  // Load data
-  loadDoctors();
-  loadTimeSlots();
-</script>
+    document.getElementById('addBtn').addEventListener('click', saveTimeSlot);
+
+    // Initialize
+    loadDoctors();
+    loadTimeSlots();
+  </script>
 
 </body>
 </html>
