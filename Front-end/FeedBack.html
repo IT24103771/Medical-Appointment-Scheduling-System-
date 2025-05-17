@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - Doctor Scheduling System</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #e0f7fa, #e1bee7);
+            margin: 0;
+            padding: 0;
+        }
+        .feedback-section {
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #6a1b9a;
+        }
+        p {
+            text-align: center;
+            color: #555;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4a148c;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        textarea {
+            resize: vertical;
+        }
+        .btn.btn-primary {
+            display: block;
+            width: 100%;
+            background-color: #7b1fa2;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .btn.btn-primary:hover {
+            background-color: #4a0072;
+        }
+    </style>
+</head>
+<body>
+    <section class="feedback-section">
+        <div class="container">
+            <h2>We Value Your Feedback</h2>
+            <p>Please share your experience with our doctor scheduling system.</p>
+
+            <form id="feedbackForm" method="POST" class="feedback-form">
+                <div class="form-group">
+                    <label for="patientName">Full Name:</label>
+                    <input type="text" id="patientName" name="patientName" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address:</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="rating">Overall Rating:</label>
+                    <select id="rating" name="rating" required>
+                        <option value="">Select a rating</option>
+                        <option value="5">Excellent (5)</option>
+                        <option value="4">Good (4)</option>
+                        <option value="3">Average (3)</option>
+                        <option value="2">Poor (2)</option>
+                        <option value="1">Very Poor (1)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="comments">Additional Comments:</label>
+                    <textarea id="comments" name="comments" rows="5" placeholder="Your feedback..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Submit Feedback</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <script>
+        document.getElementById("feedbackForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const patientName = document.getElementById("patientName").value;
+            const email = document.getElementById("email").value;
+            const rating = document.getElementById("rating").value;
+            const comments = document.getElementById("comments").value;
+
+            const feedbackData = {
+                fullName: patientName,
+                email: email,
+                rating: rating,
+                message: comments
+            };
+
+            console.log("Submitting feedback:", feedbackData);
+
+            try {
+                const response = await fetch("http://localhost:8080/api/feedback", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(feedbackData)
+                });
+
+                if (response.ok) {
+                    alert("Thank you for your feedback!");
+                    document.getElementById("feedbackForm").reset();
+                } else {
+                    alert("Failed to submit feedback. Please try again.");
+                }
+            } catch (error) {
+               console.error("Error:", error);
+                alert("An error occurred while submitting your feedback.");
+            }
+        });
+    </script>
+</body>
+</html>

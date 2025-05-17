@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Feedback Messages</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f1f5f9;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-bottom: 30px;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    #feedbackOutput {
+      width: 90%;
+      max-width: 900px;
+      background-color: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      white-space: pre-wrap; /* preserve line breaks */
+      font-family: monospace;
+      color: #333;
+      min-height: 200px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Feedback Messages</h1>
+  <button onclick="loadFeedback()">Load Feedback</button>
+
+  <pre id="feedbackOutput">Click "Load Feedback" to see feedback messages.</pre>
+
+  <script>
+    function loadFeedback() {
+      fetch('http://localhost:8080/api/feedback/all')
+        .then(response => {
+          if (!response.ok) throw new Error('Failed to fetch feedback.');
+          return response.text();
+        })
+        .then(text => {
+          const output = document.getElementById('feedbackOutput');
+          if (text.trim() === '' || text.toLowerCase().includes('no feedback found')) {
+            output.textContent = 'No feedback messages found.';
+          } else if (text.toLowerCase().startsWith('error')) {
+            output.textContent = 'Error loading feedback: ' + text;
+          } else {
+            output.textContent = text;
+          }
+        })
+        .catch(error => {
+          document.getElementById('feedbackOutput').textContent = 'Error: ' + error.message;
+        });
+    }
+  </script>
+
+</body>
+</html>
