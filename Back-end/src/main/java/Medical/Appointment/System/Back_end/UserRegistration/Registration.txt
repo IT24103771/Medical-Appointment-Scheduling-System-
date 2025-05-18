@@ -65,35 +65,13 @@ Phone Number: asda
 Registration Date: 2025-05-13
 
 New User Registration:
-Username: sadas
-Password: asda
-Full Name: asd
-Address: asdasd
-Phone Number: asdas
- Age: 232
- Gender: asdas
- Email: sadasd
-Registration Date: 2025-05-14
-
-New User Registration:
-Username: asda
-Password: asdas
-Full Name: asd
-Address: asda
-Phone Number: asdad
- Age: 232
- Gender: 3242342
- Email: sada
-Registration Date: 2025-05-14
-
-New User Registration:
-Username: asda
-Password: asdasdasdasd
-Full Name: 587687687687686786786867
-Address: asda
-Phone Number: asdad
- Age: 232
- Gender: 3242342
- Email: sada
+Username: umair
+Password: umair
+Full Name: mohamad umair
+Address: kurunegala
+Phone Number: 0778007550
+ Age: 23
+ Gender: male
+ Email: mwmumairamr2002@gmail.com
 Registration Date: 2025-05-14
 

@@ -10,7 +10,7 @@ import java.util.*;
 @RequestMapping("/api/notifications")
 public class NotificationReadController {
 
-    private final String NOTIFICATION_FILE = "C:\\Users\\User\\Documents\\OOP project\\Medical-Appointment-Scheduling-System-\\Back-end\\src\\main\\java\\Medical\\Appointment\\System\\Back_end\\AdminNotification\\notification.txt";
+    private final String NOTIFICATION_FILE = "src/main/java/Medical/Appointment/System/Back_end/AdminNotification/notification.txt";
 
     @GetMapping("/user/{username}")
     public List<Map<String, String>> getUserNotifications(@PathVariable String username) {
@@ -18,20 +18,26 @@ public class NotificationReadController {
 
         try {
             File file = new File(NOTIFICATION_FILE);
-            if (!file.exists()) {
-                return userNotifications; // empty list
-            }
+            if (!file.exists()) return userNotifications;
 
             List<String> lines = Files.readAllLines(Paths.get(NOTIFICATION_FILE));
+            Map<String, String> currentNotif = new HashMap<>();
+
             for (String line : lines) {
-                // Assuming each line format: username;date;message;method
-                String[] parts = line.split(";");
-                if (parts.length == 4 && parts[0].equalsIgnoreCase(username)) {
-                    Map<String, String> notif = new HashMap<>();
-                    notif.put("date", parts[1]);
-                    notif.put("message", parts[2]);
-                    notif.put("method", parts[3]);
-                    userNotifications.add(notif);
+                line = line.trim();
+                if (line.startsWith("To:")) {
+                    currentNotif.put("recipient", line.substring(3).trim());
+                } else if (line.startsWith("Message:")) {
+                    currentNotif.put("message", line.substring(8).trim());
+                } else if (line.startsWith("Method:")) {
+                    currentNotif.put("method", line.substring(7).trim());
+                } else if (line.startsWith("DateTime:")) {
+                    currentNotif.put("date", line.substring(9).trim());
+                } else if (line.isEmpty() && !currentNotif.isEmpty()) {
+                    if (username.equalsIgnoreCase(currentNotif.get("recipient"))) {
+                        userNotifications.add(new HashMap<>(currentNotif));
+                    }
+                    currentNotif.clear();
                 }
             }
 
