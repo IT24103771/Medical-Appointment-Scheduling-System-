@@ -1,41 +1,32 @@
 package Medical.Appointment.System.Back_end.TimeScheduling;
 
 
-
 public class TimeScheduling {
-    private String doctor;
+    private String doctorName;
+    private String date;
     private String time;
+    private String duration;
 
-    public TimeScheduling() {}
-
-    public TimeScheduling(String doctor, String time) {
-        this.doctor = doctor;
+    public TimeScheduling(String doctorName, String date, String time, String duration) {
+        this.doctorName = doctorName;
+        this.date = date;
         this.time = time;
-    }
-
-    public String getDoctor() {
-        return doctor;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setDoctor(String doctor) {
-        this.doctor = doctor;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
-
-    @Override
-    public String toString() {
-        return doctor + ";" + time;
+        this.duration = duration;
     }
 
     public static TimeScheduling fromString(String line) {
-        String[] parts = line.split(";");
-        return new TimeScheduling(parts[0], parts[1]);
+        String[] parts = line.split(",");
+        if (parts.length < 4) return new TimeScheduling("", "", "", "");
+        return new TimeScheduling(parts[0], parts[1], parts[2], parts[3]);
+    }
+
+    public String getDoctorName() { return doctorName; }
+    public String getDate() { return date; }
+    public String getTime() { return time; }
+    public String getDuration() { return duration; }
+
+    @Override
+    public String toString() {
+        return doctorName + "," + date + "," + time + "," + duration;
     }
 }
