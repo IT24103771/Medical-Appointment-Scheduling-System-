@@ -1,94 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>User Notification Center</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>User Notifications</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
+      background: #f9fafb;
       padding: 20px;
-    }
-    .container {
-      max-width: 700px;
-      margin: auto;
-      background: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin: 0;
     }
     h1 {
-      color: #2c3e50;
       text-align: center;
+      color: #2c3e50;
     }
-    .notification-table {
+    table {
       width: 100%;
+      max-width: 800px;
+      margin: 30px auto;
       border-collapse: collapse;
-      margin-top: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
     }
-    .notification-table th, .notification-table td {
-      padding: 12px;
-      border: 1px solid #ccc;
+    th, td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #ddd;
       text-align: left;
     }
-    .notification-table th {
-      background-color: #f0f0f0;
+    th {
+      background-color: #e2e8f0;
+      font-weight: bold;
+    }
+    .message {
+      text-align: center;
+      color: #ff4d4f;
+      margin-top: 20px;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>User Notification Center</h1>
+  <h1>Your Notifications</h1>
 
-    <table class="notification-table">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Message</th>
-          <th>Method</th>
-        </tr>
-      </thead>
-      <tbody id="notificationBody">
-        <!-- Notifications will be inserted here -->
-      </tbody>
-    </table>
-  </div>
+  <div id="messageBox" class="message"></div>
+
+  <table id="notifTable" style="display:none;">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Message</th>
+        <th>Method</th>
+      </tr>
+    </thead>
+    <tbody id="notifBody"></tbody>
+  </table>
 
   <script>
-    // Retrieve the username from localStorage after login
-    const username = localStorage.getItem("username"); // Ensure this is set during login
+    const username = localStorage.getItem("loggedInUser");
+    const messageBox = document.getElementById("messageBox");
+    const notifTable = document.getElementById("notifTable");
+    const notifBody = document.getElementById("notifBody");
 
     if (!username) {
-      alert("Username not found. Please log in again.");
+      messageBox.textContent = "You must be logged in to view notifications.";
     } else {
-      // Fetch notifications for the logged-in user
       fetch(`http://localhost:8080/api/notifications/user/${username}`)
-        .then(res => res.json())
-        .then(notifications => {
-          const tbody = document.getElementById("notificationBody");
-          tbody.innerHTML = ""; // Clear previous data
-
-          // If no notifications, show a message
-          if (!Array.isArray(notifications) || notifications.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="3">No notifications found.</td></tr>`;
+        .then(res => {
+          if (!res.ok) throw new Error("Failed to fetch notifications");
+          return res.json();
+        })
+        .then(data => {
+          if (!data || data.length === 0) {
+            messageBox.textContent = "No notifications found.";
             return;
           }
 
-          // Populate table with notifications
-          notifications.forEach(notification => {
+          notifTable.style.display = "table";
+          messageBox.textContent = "";
+
+          data.forEach(n => {
             const row = document.createElement("tr");
             row.innerHTML = `
-              <td>${notification.date}</td>
-              <td>${notification.message}</td>
-              <td>${notification.method}</td>
+              <td>${n.date}</td>
+              <td>${n.message}</td>
+              <td>${n.method}</td>
             `;
-            tbody.appendChild(row);
+            notifBody.appendChild(row);
           });
         })
         .catch(err => {
-          console.error("Failed to load notifications:", err);
-          document.getElementById("notificationBody").innerHTML =
-            `<tr><td colspan="3">Error loading notifications.</td></tr>`;
+          messageBox.textContent = "Error loading notifications: " + err.message;
         });
     }
   </script>

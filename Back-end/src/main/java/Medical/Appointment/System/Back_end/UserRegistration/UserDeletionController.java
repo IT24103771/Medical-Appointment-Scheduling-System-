@@ -12,7 +12,7 @@ import java.nio.file.*;
 @RequestMapping("/api/users")
 public class UserDeletionController {
     Constents constents = new Constents();
-   // private static final String FILE_PATH = "C:\\Users\\User\\Documents\\OOP project\\Medical-Appointment-Scheduling-System-\\Back-end\\src\\main\\java\\Medical\\Appointment\\System\\Back_end\\UserRegistration\\Registration.txt";
+   private static final String FILE_PATH = "src\\main\\java\\Medical\\Appointment\\System\\Back_end\\UserRegistration\\Registration.txt";
 
     @DeleteMapping("/delete")
     public String deleteUser(@RequestParam String email, @RequestParam String username) {
