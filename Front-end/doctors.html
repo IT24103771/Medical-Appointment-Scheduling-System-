@@ -1,14 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctors - Med Care</title>
-    <link rel="stylesheet" href="doctors.css">
+  <meta charset="UTF-8" />
+  <title>Doctor List</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+  --primary-color: #2563eb; /* Tailwind Blue-600 */
+  --text-color: #1e293b;
+}
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  margin: 0;
+}
+
+/* Header Styles */
+header {
+  background-color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  height: 60px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 5%;
+  height: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  height: 40px;
+  margin-right: 10px;
+}
+
+.logo h1 {
+  color: var(--primary-color);
+  font-size: 1.5rem;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+}
+
+.nav-links li {
+  margin-left: 2rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover {
+  color: var(--primary-color);
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  padding: 0.6rem 1.5rem;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+  border: 2px solid var(--primary-color);
+}
+
+.btn-primary:hover {
+  background-color: transparent;
+  color: var(--primary-color);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+}
+
+.btn-secondary:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+/* Sidebar */
+.sidebar {
+  height: 100vh;
+  width: 220px;
+  position: fixed;
+  top: 60px; /* below the fixed header */
+  left: 0;
+  background-color: #1e293b;
+  color: white;
+  padding: 20px 0;
+}
+
+.sidebar h2 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.sidebar a {
+  display: block;
+  padding: 12px 20px;
+  color: white;
+  text-decoration: none;
+}
+
+.sidebar a:hover {
+  background-color: #334155;
+}
+
+/* Main Content */
+.main-content {
+  margin-left: 220px; /* space for sidebar */
+  padding: 30px;
+  padding-top: 100px; /* space for fixed header */
+}
+
+/* Typography */
+h2, h3 {
+  color: #2c3e50;
+}
+
+/* Table Styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 25px;
+  background: white;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+th, td {
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-align: left;
+}
+
+
+
+    
+  </style>
 </head>
 <body>
 
-    <!-- Header with Navigation -->
+   <!-- Header with Navigation -->
     <header>
         <nav class="navbar">
             <div class="logo">
@@ -16,46 +183,54 @@
                 <h1>MedCare</h1>
             </div>
             <ul class="nav-links">
+                <!-- <li><a href="Home.html">Home</a></li> -->
                 <li><a href="Home.html">Home</a></li>
-                <li><a href="#">Services</a></li>
+                <li><a href="FeedBack.html">FeedBack</a></li>
                 <li><a href="doctors.html">Doctors</a></li>
                 <li><a href="AboutPage.html">About</a></li>
-                <li><a href="cantact.html">Contact</a></li>
-                <li><a href="login.html" class="btn btn-secondary">Login</a></li>
+                <li><a href="UserTimeSchedule.html">Time Scheduling</a></li>
+                <li><a href="Notification.html">Notification</a></li>
             </ul>
         </nav>
     </header>
 
-    <!-- Doctors Section -->
-    <section id="doctors-section">
-        <h2>Meet Our Expert Doctors</h2>
-        <div class="doctors-grid">
-            <div class="doctor-card">
-                <img src="umair.png" alt="Dr. M.W.M UMAIR">
-                <h3>Dr. M.W.M UMAIR</h3>
-                <p>Cardiologist</p>
-                <button class="book-btn"><a href="bookAppointment.html">Book Appointment</a></button>
-            </div>
-            <div class="doctor-card">
-                <img src="hassan.png" alt="Dr. Sarah Johnson">
-                <h3>Dr. H.H HASSAN</h3>
-                <p>Neurologist</p>
-                <button class="book-btn"><a href="bookAppointment.html">Book Appointment</a></button>
-            </div>
-            <div class="doctor-card">
-                <img src="ahamed.jpg" alt="Dr. David Brown">
-                <h3>Dr. M.A AHAMED </h3>
-                <p>Dermatologist</p>
-                <button class="book-btn"><a href="bookAppointment.html"> Appointment</a></button>
-            </div>
-            <div class="doctor-card">
-                <img src="saahid.jpg" alt="Dr. Emily White">
-                <h3>Dr. SAAHEED</h3>
-                <p>Pediatrician</p>
-                <button class="book-btn"><a href="bookAppointment.html">Book Appointment</a></button>
-            </div>
-        </div>
-    </section>
+  <div class="main-content">
+    <h2>Doctor List</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Specialty</th>
+          <th>Contact</th>
+        </tr>
+      </thead>
+      <tbody id="doctorTableBody"></tbody>
+    </table>
+  </div>
 
+  <script>
+    async function loadDoctors() {
+      try {
+        const response = await fetch("http://localhost:8080/api/doctors/read/json");
+        const doctors = await response.json();
+        const tbody = document.getElementById("doctorTableBody");
+        tbody.innerHTML = "";
+
+        doctors.forEach(doc => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${doc.name}</td>
+            <td>${doc.specialty}</td>
+            <td>${doc.contact || ''}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      } catch (error) {
+        console.error("Error loading doctors:", error);
+      }
+    }
+
+    loadDoctors();
+  </script>
 </body>
 </html>

@@ -1,2 +1,4 @@
 Dr.Smith,Cardialogy
 Dr.Jhonson,Neurology
+rashid,mbbs
+hassan,mbbs

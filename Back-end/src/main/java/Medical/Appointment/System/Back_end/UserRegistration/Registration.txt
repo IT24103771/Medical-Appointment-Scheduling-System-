@@ -1,5 +1,5 @@
 New User Registration:
-Username: 1234
+Username: rashid
 Password: 1234
 Full Name: mohamedShahid 
 Address: 4444
