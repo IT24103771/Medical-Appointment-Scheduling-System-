@@ -5,6 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedCare - Appointment Scheduling</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+       
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .auth-buttons a {
+            background-color: white;
+            color: #007BFF;
+            padding: 6px 12px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .auth-buttons a:hover {
+            background-color: #e6e6e6;
+        }
+    </style>
 </head>
 <body>
     <!-- Header with Navigation -->
@@ -15,13 +35,16 @@
                 <h1>MedCare</h1>
             </div>
             <ul class="nav-links">
-                <!-- <li><a href="Home.html">Home</a></li> -->
-                <li><a href="login.html">FeedBack</a></li>
+                <li><a href="login.html">Feedback</a></li>
                 <li><a href="login.html">Doctors</a></li>
                 <li><a href="AboutPage.html">About</a></li>
                 <li><a href="login.html">Time Scheduling</a></li>
                 <li><a href="login.html">Notification</a></li>
             </ul>
+            <div class="auth-buttons">
+                <a href="login.html">Login</a>
+                <a href="Registration.html">Register</a>
+            </div>
         </nav>
     </header>
 
@@ -33,7 +56,6 @@
             <div class="hero-buttons">
                 <a href="login.html" class="btn btn-primary">Book Appointment</a>
                 <a href="learnmore.html" class="btn btn-secondary">Learn More</a>
-                
             </div>
         </div>
     </section>
@@ -83,7 +105,7 @@
                 <h3>Contact Us</h3>
                 <ul>
                     <li>125/1 Kurunegale Dambulla Rd</li>
-                    <li>Health City.</li>
+                    <li>Health City</li>
                     <li>Phone: 037 223 5558</li>
                     <li>Email: medcare08@gmail.com</li>
                 </ul>

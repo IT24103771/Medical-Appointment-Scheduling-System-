@@ -119,3 +119,14 @@ Phone Number: 99999
  Email: lll@gmail.com
 Registration Date: 2025-05-19
 
+New User Registration:
+Username: rsd
+Password: 1234
+Full Name: RASHID AHAMED
+Address: kurunegala 
+Phone Number: 0771611903
+ Age: 32
+ Gender: Male
+ Email: rashidnaleef12@gmail.com 
+Registration Date: 2025-05-19
+

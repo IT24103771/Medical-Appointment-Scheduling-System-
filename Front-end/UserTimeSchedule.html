@@ -5,42 +5,170 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Scheduled Time Slots</title>
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 40px auto;
-      max-width: 800px;
-      color: #2c3e50;
-      background-color: #fafafa;
-      line-height: 1.6;
-    }
-    h1 {
-      font-weight: 600;
-      margin-bottom: 1rem;
-      text-align: center;
-    }
-    pre {
-      background-color: #f4f4f4;
-      padding: 20px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      min-height: 150px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    }
-    .loading {
-      font-style: italic;
-      color: #888;
-      text-align: center;
-    }
-    .error {
-      color: #d9534f;
-      font-weight: 600;
-      text-align: center;
-    }
+  /* Root Variables */
+:root {
+    --primary-color: #7b1fa2;
+    --text-color: #2c3e50;
+}
+
+/* Reset & Base Body Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fafafa;
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+/* Header Styles */
+header {
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    height: 40px;
+    margin-right: 10px;
+}
+
+.logo h1 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links li {
+    margin-left: 2rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: var(--primary-color);
+}
+
+/* Buttons (if any) */
+.btn {
+    display: inline-block;
+    padding: 0.6rem 1.5rem;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    border: 2px solid var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: transparent;
+    color: var(--primary-color);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+}
+
+.btn-secondary:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Add spacing below header */
+.main-content {
+    margin-top: 100px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 20px;
+}
+
+/* Timeschedule Page Styles */
+h1 {
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+pre {
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    min-height: 150px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Status Text Styles */
+.loading {
+    font-style: italic;
+    color: #888;
+    text-align: center;
+}
+
+.error {
+    color: #d9534f;
+    font-weight: 600;
+    text-align: center;
+}
+
   </style>
 </head>
 <body>
+  <!-- Header with Navigation -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <img src="medcareimg.png" alt="MedCare Logo">
+                <h1>MedCare</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="Home.html">Home</a></li>
+                <li><a href="FeedBack.html">FeedBack</a></li>
+                <li><a href="doctors.html">Doctors</a></li>
+                <li><a href="AboutPage.html">About</a></li>
+                <li><a href="Notification.html">Notification</a></li>
+            </ul>
+        </nav>
+    </header>
   <main>
     <h1>Scheduled Time Slots</h1>
     <pre id="timeslotText" class="loading">Loading time slots...</pre>
