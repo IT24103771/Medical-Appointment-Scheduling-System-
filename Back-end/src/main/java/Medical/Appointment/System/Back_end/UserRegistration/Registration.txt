@@ -1,15 +1,4 @@
 New User Registration:
-Username: shahid
-Password: 1234
-Full Name: shahid 
-Address: bnmbnmbm
-Phone Number: 5675675
- Age: 3
- Gender: male 
- Email: shahid77099p@gmail.com
-Registration Date: 2025-05-13
-
-New User Registration:
 Username: 1234
 Password: 1234
 Full Name: mohamedShahid 
@@ -74,4 +63,59 @@ Phone Number: 0778007550
  Gender: male
  Email: mwmumairamr2002@gmail.com
 Registration Date: 2025-05-14
+
+New User Registration:
+Username: hasan
+Password: 1234
+Full Name: shahid
+Address: 123
+Phone Number: 99999
+ Age: 5
+ Gender: 55
+ Email: shah@gmail.com
+Registration Date: 2025-05-19
+
+New User Registration:
+Username: shahid
+Password: ggggggg
+Full Name: ssss
+Address: 123
+Phone Number: 99999
+ Age: 234
+ Gender: male
+ Email: shah@gmail.com
+Registration Date: 2025-05-19
+
+New User Registration:
+Username: shahid
+Password: 1234
+Full Name: ssss
+Address: 123
+Phone Number: 99999
+ Age: 234
+ Gender: male
+ Email: lll@gmail.com
+Registration Date: 2025-05-19
+
+New User Registration:
+Username: farhath
+Password: 1234
+Full Name: farhathahamed
+Address: hhhh
+Phone Number: 99999
+ Age: 234
+ Gender: male
+ Email: shah@gmail.com
+Registration Date: 2025-05-19
+
+New User Registration:
+Username: 33
+Password: 33
+Full Name: shahid
+Address: 33
+Phone Number: 99999
+ Age: 234
+ Gender: male
+ Email: lll@gmail.com
+Registration Date: 2025-05-19
 

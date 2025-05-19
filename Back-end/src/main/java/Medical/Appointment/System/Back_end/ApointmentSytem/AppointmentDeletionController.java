@@ -9,7 +9,7 @@ import java.nio.file.*;
 @RequestMapping("/api/appointments")
 public class AppointmentDeletionController {
 
-    private static final String FILE_PATH = "C:\\Users\\User\\Documents\\OOP project\\Medical-Appointment-Scheduling-System-\\Back-end\\src\\main\\java\\Medical\\Appointment\\System\\Back_end\\ApointmentSytem\\appointments.txt";
+    private static final String FILE_PATH = "src/main/java/Medical/Appointment/System/Back_end/ApointmentSytem/appointments.txt";
 
     @DeleteMapping("/delete")
     public String deleteAppointment(@RequestParam String email, @RequestParam String appointmentDate) {
