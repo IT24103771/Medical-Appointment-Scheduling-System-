@@ -1,11 +1,12 @@
 package Medical.Appointment.System.Back_end.TimeScheduling;
+
 import org.springframework.web.bind.annotation.*;
 import Medical.Appointment.System.Back_end.ManageDoctors.MangeDoctors;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.Paths;
+import java.util.*;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -20,7 +21,7 @@ public class TimeSchedulingController {
         List<TimeScheduling> list = new ArrayList<>();
         if (!new File(TIME_FILE).exists()) return list;
 
-        List<String> lines = Files.readAllLines(new File(TIME_FILE).toPath());
+        List<String> lines = Files.readAllLines(Paths.get(TIME_FILE));
         for (String line : lines) {
             if (!line.trim().isEmpty()) {
                 list.add(TimeScheduling.fromString(line));
@@ -31,23 +32,41 @@ public class TimeSchedulingController {
 
     @PostMapping("/save")
     public String saveTimeSlot(@RequestBody TimeScheduling timeSlot) throws IOException {
-        FileWriter writer = new FileWriter(TIME_FILE, true);
-        writer.write(timeSlot.toString() + "\n");
-        writer.close();
+        // Append new time slot to file
+        try (FileWriter writer = new FileWriter(TIME_FILE, true)) {
+            writer.write(timeSlot.toString() + "\n");
+        }
         return "Time slot saved.";
     }
 
     @PostMapping("/delete")
     public String deleteTimeSlot(@RequestBody TimeScheduling timeSlot) throws IOException {
-        List<String> lines = Files.readAllLines(new File(TIME_FILE).toPath());
+        List<String> lines = Files.readAllLines(Paths.get(TIME_FILE));
         List<String> updated = new ArrayList<>();
         for (String line : lines) {
             if (!line.equals(timeSlot.toString())) {
                 updated.add(line);
             }
         }
-        Files.write(new File(TIME_FILE).toPath(), updated);
+        Files.write(Paths.get(TIME_FILE), updated);
         return "Time slot deleted.";
+    }
+
+    // New endpoint to update a time slot: delete old slot and add new one
+    @PostMapping("/update")
+    public String updateTimeSlot(@RequestBody UpdateRequest request) throws IOException {
+        // Delete old slot
+        List<String> lines = Files.readAllLines(Paths.get(TIME_FILE));
+        List<String> updated = new ArrayList<>();
+        for (String line : lines) {
+            if (!line.equals(request.oldSlot.toString())) {
+                updated.add(line);
+            }
+        }
+        // Add new slot
+        updated.add(request.newSlot.toString());
+        Files.write(Paths.get(TIME_FILE), updated);
+        return "Time slot updated.";
     }
 
     @GetMapping("/doctors")
@@ -63,5 +82,11 @@ public class TimeSchedulingController {
             }
         }
         return doctors;
+    }
+
+    // Helper class for update request payload
+    public static class UpdateRequest {
+        public TimeScheduling oldSlot;
+        public TimeScheduling newSlot;
     }
 }

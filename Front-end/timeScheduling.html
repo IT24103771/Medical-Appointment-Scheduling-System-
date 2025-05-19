@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Admin - Doctor Availability</title>
   <style>
+    /* (your existing styles here, unchanged) */
     * { box-sizing: border-box; }
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       background-color: #f0f0f0;
     }
-
     .sidebar {
       height: 100vh;
       width: 220px;
@@ -19,37 +19,30 @@
       color: white;
       padding: 20px 0;
     }
-
     .sidebar h2 {
       text-align: center;
       margin-bottom: 30px;
     }
-
     .sidebar a {
       display: block;
       padding: 12px 20px;
       color: white;
       text-decoration: none;
     }
-
     .sidebar a:hover {
       background-color: #334155;
     }
-
     .main-content {
       margin-left: 220px;
       padding: 30px;
     }
-
     h2, h3 {
       color: #2c3e50;
     }
-
     input, select {
       margin: 5px;
       padding: 8px;
     }
-
     button {
       padding: 6px 12px;
       margin: 5px;
@@ -59,7 +52,6 @@
       cursor: pointer;
       border-radius: 4px;
     }
-
     table {
       width: 100%;
       border-collapse: collapse;
@@ -67,17 +59,14 @@
       background: white;
       box-shadow: 0 0 5px rgba(0,0,0,0.1);
     }
-
     th, td {
       padding: 10px;
       border: 1px solid #ccc;
     }
-
     td button {
       background-color: #3b82f6;
       margin-right: 5px;
     }
-
     td button:last-child {
       background-color: #ef4444;
     }
@@ -101,7 +90,7 @@
 
     <h3>Assign Available Time Slot</h3>
     <select id="doctorSelect"></select>
-    <input type="datetime-local" id="timeSlot">
+    <input type="datetime-local" id="timeSlot" />
     <button id="addBtn">Add Time Slot</button>
 
     <h3>Doctor Time Slots</h3>
@@ -122,32 +111,45 @@
     let timeSlots = [];
 
     async function loadDoctors() {
-      const response = await fetch("http://localhost:8080/api/doctors/all");
-      const doctors = await response.json();
-      const select = document.getElementById('doctorSelect');
-      select.innerHTML = '';
-      doctors.forEach(doc => {
-        const option = document.createElement('option');
-        option.value = doc.name;
-        option.textContent = `${doc.name} (${doc.specialty})`;
-        select.appendChild(option);
-      });
+      try {
+        const response = await fetch("http://localhost:8080/api/doctors/all");
+        const doctors = await response.json();
+        const select = document.getElementById("doctorSelect");
+        select.innerHTML = "";
+        doctors.forEach((doc) => {
+          const option = document.createElement("option");
+          option.value = doc.name;
+          option.textContent = `${doc.name} (${doc.specialty})`;
+          select.appendChild(option);
+        });
+      } catch (error) {
+        console.error("Error loading doctors:", error);
+      }
     }
 
     async function loadTimeSlots() {
-      const response = await fetch("http://localhost:8080/api/timeslots");
-      timeSlots = await response.json();
-      renderSlots();
+      try {
+        const response = await fetch("http://localhost:8080/api/timeslots");
+        timeSlots = await response.json();
+        renderSlots();
+      } catch (error) {
+        console.error("Error loading time slots:", error);
+      }
     }
 
     function renderSlots() {
-      const tbody = document.getElementById('slotsTableBody');
-      tbody.innerHTML = '';
+      const tbody = document.getElementById("slotsTableBody");
+      tbody.innerHTML = "";
       timeSlots.forEach((slot, index) => {
-        const row = document.createElement('tr');
+        if (!slot || !slot.doctor || !slot.time) return;
+
+        const parsedTime = new Date(slot.time);
+        if (isNaN(parsedTime.getTime())) return;
+
+        const row = document.createElement("tr");
         row.innerHTML = `
           <td>${slot.doctor}</td>
-          <td>${new Date(slot.time).toLocaleString()}</td>
+          <td>${parsedTime.toLocaleString()}</td>
           <td>
             <button onclick="editSlot(${index})">Edit</button>
             <button onclick="deleteSlot(${index})">Delete</button>
@@ -158,48 +160,75 @@
     }
 
     async function saveTimeSlot() {
-      const doctor = document.getElementById('doctorSelect').value;
-      const time = document.getElementById('timeSlot').value;
+      const doctor = document.getElementById("doctorSelect").value;
+      const time = document.getElementById("timeSlot").value;
 
-      if (!doctor || !time) return;
+      if (!doctor || !time) {
+        alert("Doctor and time must be selected.");
+        return;
+      }
 
       const payload = { doctor, time };
-      await fetch("http://localhost:8080/api/timeslots/save", {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
 
-      await loadTimeSlots();
-      document.getElementById('timeSlot').value = '';
-      document.getElementById('addBtn').textContent = 'Add Time Slot';
-      editIndex = -1;
+      try {
+        if (editIndex >= 0) {
+          // Call backend update endpoint
+          const oldSlot = timeSlots[editIndex];
+          await fetch("http://localhost:8080/api/timeslots/update", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ oldSlot, newSlot: payload }),
+          });
+          editIndex = -1;
+        } else {
+          // Add new slot
+          await fetch("http://localhost:8080/api/timeslots/save", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+        }
+
+        await loadTimeSlots();
+        document.getElementById("timeSlot").value = "";
+        document.getElementById("addBtn").textContent = "Add Time Slot";
+      } catch (error) {
+        console.error("Error saving time slot:", error);
+      }
     }
 
     function editSlot(index) {
       const slot = timeSlots[index];
-      document.getElementById('doctorSelect').value = slot.doctor;
-      document.getElementById('timeSlot').value = slot.time;
+      if (!slot) return;
+
+      document.getElementById("doctorSelect").value = slot.doctor;
+      document.getElementById("timeSlot").value = slot.time;
       editIndex = index;
-      document.getElementById('addBtn').textContent = 'Update Slot';
+      document.getElementById("addBtn").textContent = "Update Slot";
     }
 
     async function deleteSlot(index) {
       const slot = timeSlots[index];
-      await fetch("http://localhost:8080/api/timeslots/delete", {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(slot)
-      });
-      await loadTimeSlots();
+      if (!slot || !slot.doctor || !slot.time) return;
+
+      try {
+        await fetch("http://localhost:8080/api/timeslots/delete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(slot),
+        });
+
+        await loadTimeSlots();
+      } catch (error) {
+        console.error("Error deleting time slot:", error);
+      }
     }
 
-    document.getElementById('addBtn').addEventListener('click', saveTimeSlot);
+    document.getElementById("addBtn").addEventListener("click", saveTimeSlot);
 
-    // Initialize
+    // Initial load
     loadDoctors();
     loadTimeSlots();
   </script>
-
 </body>
 </html>
