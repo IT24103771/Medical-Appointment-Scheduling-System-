@@ -11,9 +11,8 @@ public class AppointmentController {
 
     @PostMapping("/save")
     public String saveAppointment(@RequestBody Appointment appointment) {
-        String urgency = appointment.getUrgencyLevel().toLowerCase();  // normalize
+        String urgency = appointment.getUrgencyLevel().toLowerCase();
         String filePath = "src/main/java/Medical/Appointment/System/Back_end/ApointmentSytem/appointments.txt";
-
 
         String textMsg = String.format(
                 "=== URGENCY LEVEL: %s ===%n" +
@@ -25,53 +24,54 @@ public class AppointmentController {
                 appointment.getPhone(), appointment.getNotes()
         );
 
+        // Custom linear queues
+        QueueX emergencyQueue = new QueueX(100);
+        QueueX urgentQueue = new QueueX(100);
+        QueueX routineQueue = new QueueX(100);
+
         try {
             File file = new File(filePath);
-            StringBuilder emergency = new StringBuilder();
-            StringBuilder urgent = new StringBuilder();
-            StringBuilder routine = new StringBuilder();
 
-            // Read current content and split based on urgency
             if (file.exists()) {
                 String content = new String(Files.readAllBytes(file.toPath()));
                 String[] entries = content.split("(?=== URGENCY LEVEL:)");
 
                 for (String entry : entries) {
                     if (entry.toLowerCase().contains("emergency")) {
-                        emergency.append(entry);
+                        emergencyQueue.insert(entry);
                     } else if (entry.toLowerCase().contains("urgent")) {
-                        urgent.append(entry);
+                        urgentQueue.insert(entry);
                     } else if (entry.toLowerCase().contains("routine")) {
-                        routine.append(entry);
+                        routineQueue.insert(entry);
                     }
                 }
             }
 
-            // Place the new appointment in the correct category
+            // Add new appointment
             switch (urgency) {
                 case "emergency":
-                    emergency.insert(0, textMsg);  // new emergency goes on top
+                    emergencyQueue.insert(textMsg);
                     break;
                 case "urgent":
-                    urgent.append(textMsg);
+                    urgentQueue.insert(textMsg);
                     break;
                 case "routine":
                 default:
-                    routine.append(textMsg);
+                    routineQueue.insert(textMsg);
                     break;
             }
 
-            // Write everything back in order: Emergency -> Urgent -> Routine
+            // Write back to file
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-                writer.write(emergency.toString());
-                writer.write(urgent.toString());
-                writer.write(routine.toString());
+                for (String entry : emergencyQueue.toArray()) writer.write(entry);
+                for (String entry : urgentQueue.toArray()) writer.write(entry);
+                for (String entry : routineQueue.toArray()) writer.write(entry);
             }
 
         } catch (IOException e) {
             return "Failed to save appointment: " + e.getMessage();
         }
 
-        return "Appointment saved with urgency prioritized!";
+        return "Appointment saved using linear queue urgency prioritization!";
     }
 }

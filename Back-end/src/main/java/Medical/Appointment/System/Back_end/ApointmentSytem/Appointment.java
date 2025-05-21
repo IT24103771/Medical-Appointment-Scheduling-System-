@@ -15,16 +15,16 @@ public class Appointment {
 
 
     public Appointment(String appointmentDate,String department,String dob,String doctor,String email,String firstName,String lastName,String notes,String phone,String urgencyLevel){
-      this.appointmentDate = appointmentDate;
-      this.department = department;
-      this.dob = dob;
-      this.doctor = doctor;
-      this.email = email;
-      this.firstName = firstName;
-      this.lastName = lastName;
-      this.notes = notes;
-      this.phone = phone;
-      this.urgencyLevel = urgencyLevel;
+        this.appointmentDate = appointmentDate;
+        this.department = department;
+        this.dob = dob;
+        this.doctor = doctor;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.notes = notes;
+        this.phone = phone;
+        this.urgencyLevel = urgencyLevel;
 
     }
     public String getUrgencyLevel() {
